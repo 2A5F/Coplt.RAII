@@ -5,6 +5,10 @@ Disable copying of structures
 Currently, dispose check is not supported,  
 it is recommended to use jetbrains [[MustDisposeResource](https://www.jetbrains.com/help/rider/Reference__Code_Annotation_Attributes.html#MustDisposeResourceAttribute)]
 
+### Todo
+- [x] EqualsValueClauseSyntax
+- [ ] other expr
+
 ### Example
 
 ```csharp
