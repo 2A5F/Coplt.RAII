@@ -5,10 +5,6 @@ Disable copying of structures
 Currently, dispose check is not supported,  
 it is recommended to use jetbrains [[MustDisposeResource](https://www.jetbrains.com/help/rider/Reference__Code_Annotation_Attributes.html#MustDisposeResourceAttribute)]
 
-### Todo
-- [x] EqualsValueClauseSyntax
-- [ ] other expr
-
 ### Example
 
 ```csharp
@@ -30,3 +26,7 @@ var b = a.Move(); // ok
 var b = a; // err
 // Error RAII0001: Copying RAII struct Foo is not allowed, try calling a method that returns Foo to get a copy
 ```
+
+### Todo
+- [x] EqualsValueClauseSyntax
+- [ ] other expr
