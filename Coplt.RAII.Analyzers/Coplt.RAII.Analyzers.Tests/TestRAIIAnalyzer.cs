@@ -73,4 +73,60 @@ public static class Program
             }
         }.RunAsync();
     }
+
+    [Fact]
+    public async Task Test3()
+    {
+        const string code = BasicCode + @"
+public static class Program
+{
+    public static void Main()
+    {
+        var a = new Foo();
+        Some(a);
+    }
+    public static void Some(Foo foo) { }
+}
+";
+        await new Verifier
+        {
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net80,
+            TestState =
+            {
+                Sources = { code },
+                AdditionalReferences = { typeof(RAIIAttribute).Assembly.Location },
+            },
+            ExpectedDiagnostics =
+            {
+                new DiagnosticResult(RAIIAnalyzer.Rule_DisableCopy)
+                    .WithSpan(15, 14, 15, 15)
+                    .WithArguments("Foo"),
+            }
+        }.RunAsync();
+    }
+
+    [Fact]
+    public async Task Test4()
+    {
+        const string code = BasicCode + @"
+public static class Program
+{
+    public static void Main()
+    {
+        var a = new Foo();
+        Some(a);
+    }
+    public static void Some(in Foo foo) { }
+}
+";
+        await new Verifier
+        {
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net80,
+            TestState =
+            {
+                Sources = { code },
+                AdditionalReferences = { typeof(RAIIAttribute).Assembly.Location },
+            }
+        }.RunAsync();
+    }
 }

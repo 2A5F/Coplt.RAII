@@ -38,7 +38,6 @@ public class RAIIAnalyzer : DiagnosticAnalyzer
             GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
         context.EnableConcurrentExecution();
 
-        context.RegisterOperationAction(AnalyzerVariableDeclaration, OperationKind.VariableDeclaration);
         context.RegisterSyntaxNodeAction(AnalyzerID, SyntaxKind.IdentifierName);
     }
 
@@ -60,21 +59,36 @@ public class RAIIAnalyzer : DiagnosticAnalyzer
         };
     }
 
-    private void AnalyzerID(SyntaxNodeAnalysisContext ctx)
+    private static bool ShouldReportCopy(SyntaxNodeAnalysisContext ctx, SyntaxNode syntax, out TypeInfo typeInfo)
     {
-        if (ctx.Node is not IdentifierNameSyntax identifier) return;
-        if (identifier.Parent is not EqualsValueClauseSyntax) return;
-        var typeInfo = ctx.SemanticModel.GetTypeInfo(ctx.Node);
+        typeInfo = ctx.SemanticModel.GetTypeInfo(syntax);
         var raii_attr = typeInfo.Type?.GetAttributes()
             .FirstOrDefault(IsRaii);
-        if (raii_attr is null) return;
-        ctx.ReportDiagnostic(Diagnostic.Create(Rule_DisableCopy, identifier.GetLocation(),
+        return raii_attr != null;
+    }
+    
+    private static void ReportCopy(SyntaxNodeAnalysisContext ctx, SyntaxNode syntax, TypeInfo typeInfo)
+    {
+        ctx.ReportDiagnostic(Diagnostic.Create(Rule_DisableCopy, syntax.GetLocation(),
             typeInfo.Type));
     }
 
-    private void AnalyzerVariableDeclaration(OperationAnalysisContext obj)
+    private static void AnalyzerID(SyntaxNodeAnalysisContext ctx)
     {
-        if (obj.Operation is not IVariableDeclarationOperation variable) return;
-        // Console.WriteLine(variable);
+        if (ctx.Node is not IdentifierNameSyntax identifier) return;
+        if (!ShouldReportCopy(ctx, identifier, out var typeInfo)) return;
+        if (identifier.Parent is EqualsValueClauseSyntax { Value: var v0 } && v0 == identifier)
+            ReportCopy(ctx, identifier, typeInfo);
+        if (identifier.Parent is ArgumentSyntax { Expression: var v1 } arg && v1 == identifier)
+        {
+            if (arg.Parent is not { Parent: InvocationExpressionSyntax invocation }) return;
+            var index = invocation.ArgumentList.Arguments.IndexOf(arg);
+            if (index < 0) return;
+            var symbolInfo = ctx.SemanticModel.GetSymbolInfo(invocation);
+            if (symbolInfo is not { Symbol: IMethodSymbol symbol }) return;
+            var parameter = symbol.Parameters[index];
+            if (parameter.RefKind is not RefKind.None) return;
+            ReportCopy(ctx, identifier, typeInfo);
+        }
     }
 }

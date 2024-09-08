@@ -29,4 +29,5 @@ var b = a; // err
 
 ### Todo
 - [x] EqualsValueClauseSyntax
+- [x] ArgumentSyntax
 - [ ] other expr
