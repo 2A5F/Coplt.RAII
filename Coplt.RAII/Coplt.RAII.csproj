@@ -13,6 +13,6 @@
     <ItemGroup>
         <None Include="..\LICENSE.md" Pack="true" PackagePath="\"/>
         <None Include="..\README.md" Pack="true" PackagePath="\"/>
-        <None Include="..\Coplt.RAII.Analyzers\Coplt.RAII.Analyzers\bin\Release\netstandard2.0\**\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+        <None Include="..\Coplt.RAII.Analyzers\Coplt.RAII.Analyzers\bin\Release\netstandard2.0\**\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" Condition="'$(Configuration)' == 'Release'" />
     </ItemGroup>
 </Project>
