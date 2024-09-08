@@ -1,5 +1,8 @@
 # Coplt.RAII
 
+[![.NET](https://github.com/2A5F/Coplt.RAII/actions/workflows/dotnet.yml/badge.svg)](https://github.com/2A5F/Coplt.RAII/actions/workflows/dotnet.yml)
+[![Nuget](https://img.shields.io/nuget/v/Coplt.RAII)](https://www.nuget.org/packages/Coplt.RAII/)
+
 Disable copying of structures
 
 Currently, dispose check is not supported,  

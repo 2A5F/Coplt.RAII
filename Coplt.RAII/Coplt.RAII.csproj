@@ -5,14 +5,23 @@
         <LangVersion>12.0</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <IsTrimmable>True</IsTrimmable>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>0.1.0</Version>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+        <RepositoryUrl>https://github.com/2A5F/Coplt.RAII</RepositoryUrl>
+        <PackageTags>Roslyn Analyzers;RAII;Analyzers</PackageTags>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(TargetFrameworks)' == 'net8.0'">
+        <IsAotCompatible>True</IsAotCompatible>
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="..\LICENSE.md" Pack="true" PackagePath="\"/>
-        <None Include="..\README.md" Pack="true" PackagePath="\"/>
+        <None Include="..\LICENSE.md" Pack="true" PackagePath="\" />
+        <None Include="..\README.md" Pack="true" PackagePath="\" />
         <None Include="..\Coplt.RAII.Analyzers\Coplt.RAII.Analyzers\bin\Release\netstandard2.0\**\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" Condition="'$(Configuration)' == 'Release'" />
     </ItemGroup>
 </Project>
